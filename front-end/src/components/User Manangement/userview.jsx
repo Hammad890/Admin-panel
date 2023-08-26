@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Box,TextField } from '@mui/material'
 import { useNavigate,useLocation } from 'react-router-dom'
 
+
 export default function Userview() {
     const navigate= useNavigate();
     const location= useLocation();
@@ -10,21 +11,20 @@ export default function Userview() {
     const [userName,setUserName] =useState(user ? user.username: '');
     const [email,setEmail]= useState(user ? user.email: '');
     const [number,setNumber]= useState(user ? user.number: '');
-    const handleSave=(e)=>{
-        const newUser= {username: userName,email: email,number: number, };
-        const existingUsers = JSON.parse(localStorage.getItem('users')) || [];
-        if (user) {
-          const updatedUsers = existingUsers.map((u) => (u.username === user.username ? newUser : u));
-          setUsers(updatedUsers);
-          localStorage.setItem('users', JSON.stringify(updatedUsers));
-        } else {
-          const updatedUsers = [...existingUsers, newUser];
-          setUsers(updatedUsers);
-          localStorage.setItem('users', JSON.stringify(updatedUsers));
+    const handleSave= async(e)=>{
+        const newUser= {username: userName,email: email,number: number, }
+        let result = await fetch('http://localhost:8000/user',{
+          method: 'POST',
+          body: JSON.stringify(newUser),
+          headers: {
+            "Content-Type": "application/json"
         }
-        e.preventDefault();
-        navigate('/userform');
-    }
+        })
+        result = await result.json();
+          navigate('/userform');
+          e.preventDefault();
+        }
+        
   return (
   <Box
       component="form"
@@ -76,4 +76,4 @@ export default function Userview() {
       </div>
     </Box>
   )
-}
+    }

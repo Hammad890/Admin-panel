@@ -31,7 +31,7 @@ export default function Productform() {
   const deleteModal= ()=>{
     setShowDeleteModal(true)
   } 
-    const handleDeleteUser = (product) => {  
+    const handleDeleteProduct = (product) => {  
       const updatedProducts = products.filter((u) => u.productname !== product.productname);
       setProducts(updatedProducts);
       localStorage.setItem('products',JSON.stringify(updatedProducts));
@@ -84,7 +84,7 @@ export default function Productform() {
         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4 }}>
           <h2 id="modal-modal-title">Confirm Delete</h2>
           <p id="modal-modal-description">Are you sure you want to delete this user?</p>
-          <Button onClick={handleDeleteUser} color="error" variant="contained">
+          <Button onClick={()=>handleDeleteProduct(product)} color="error" variant="contained">
             Delete
           </Button>
           <Button onClick={() => setShowDeleteModal(false)} variant="contained">

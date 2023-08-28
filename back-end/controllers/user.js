@@ -36,14 +36,14 @@ export const editById= async (req,res,next) => {
     }
 }
 
-export const createUser= async (req,res,next) => {
+export const createUser= async (req,res) => {
     const body= req.body
     try{
         const user= new User(body)
         await user.save()
         return res.status(200).send({message: "User Added Successfully"})
     } catch(err){
-        next (err)
+        return (err)
     }
 }
 export const deleteUser= async (req,res,next) => {

@@ -13,7 +13,8 @@ export default function Userview() {
     const [number,setNumber]= useState(user ? user.number: '');
     const handleSave= async(e)=>{
         const newUser= {username: userName,email: email,number: number, }
-        let result = await fetch('http://localhost:8000/user',{
+        try{
+        let result = await fetch('http://localhost:5000/user',{
           method: 'POST',
           body: JSON.stringify(newUser),
           headers: {
@@ -23,8 +24,10 @@ export default function Userview() {
         result = await result.json();
           navigate('/userform');
           e.preventDefault();
+        } catch (error) {
+          console.error("Network error:", error);
         }
-        
+      }
   return (
   <Box
       component="form"

@@ -2,6 +2,7 @@ import  express, {json}  from "express";
 import callDb from "./helpers/db"
 import userRouter from "./Routes/user"
 import productRouter from "./Routes/product"
+import cors from "cors"
 
 const app= express()
 app.use(json())

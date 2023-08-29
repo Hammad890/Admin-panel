@@ -20,9 +20,16 @@ export default function Userform() {
     const { user }= location.state || {};
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     useEffect(() => {
-      const loadedUsers = JSON.parse(localStorage.getItem('users')) || [];
-      setUsers(loadedUsers);
+     userData();
     }, []);
+    const userData= async ()=>{
+      let result= await fetch('http://localhost:5000/user',{
+        method: 'GET',
+      })
+      result= await result.json()
+      console.log(result);
+      setUsers(result);
+    }
     const handleEditUser = (setUsers) => {
       navigate('/userview', { state: { user : setUsers } })
     }
@@ -35,16 +42,17 @@ export default function Userform() {
     setUsers(updatedUsers);
     localStorage.setItem('users',JSON.stringify(updatedUsers));
     }
-    const userRows = users.map((user) => (
+    const userRows = Array.isArray(users)
+    ? users.map((u) => (
       <TableRow
-        key={user.username}
+        key={u._id}
         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
       >
         <TableCell component="th" scope="row">
-          {user.username}
+          {u.username}
         </TableCell>
-        <TableCell align="right">{user.email}</TableCell>
-        <TableCell align="right">{user.number}</TableCell>
+        <TableCell align="right">{u.email}</TableCell>
+        <TableCell align="right">{u.number}</TableCell>
         <TableCell align="right">
         <Stack direction="row" spacing={0} >
 <IconButton aria-label="delete" onClick={()=>deleteModal(user)} >
@@ -56,7 +64,7 @@ export default function Userform() {
 </Stack>
 </TableCell>
 </TableRow>
-))
+)):[];
   return (
     <div style={{justifyContent: 'center',paddingRight: 400+'px'}}>
       <TableContainer component={Paper}>

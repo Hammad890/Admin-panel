@@ -12,7 +12,7 @@ export default function Userview() {
     const [email,setEmail]= useState(user ? user.email: '');
     const [number,setNumber]= useState(user ? user.number: '');
     const handleSave= async(e)=>{
-        const newUser= {username: userName,email: email,number: number, }
+        const newUser= {username: userName,email,number}
         try{
         let result = await fetch('http://localhost:5000/user',{
           method: 'POST',
@@ -60,7 +60,7 @@ export default function Userview() {
         <TextField
           required
           id="outlined-password-input"
-          label="Password"
+          label="Password:"
           type="password"
           autoComplete="current-password"
           placeholder='******'
@@ -69,9 +69,7 @@ export default function Userview() {
           id="outlined-number"
           label="Number"
           type="phone number"
-          defaultValue= '+92'
           name='number'
-          value={number}
           onChange={(e)=>setNumber(e.target.value)}
         />
         <TextField id="outlined-search" label="Address" />

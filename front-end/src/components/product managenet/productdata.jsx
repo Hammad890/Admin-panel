@@ -1,32 +1,32 @@
 import React from 'react'
 import { Box,Select,TextField,MenuItem,InputLabel,FormControl } from '@mui/material'
-import { useNavigate,useLocation } from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 import { useState } from 'react';
 
-export default function Productview() {
+export default function Productdata() {
   const navigate= useNavigate();
-  const location= useLocation();
-  const {product}= location.state || {};
   const [products, setProducts]= useState([]);
-  const [productName,setProductName] =useState(product ? product.productname: '');
-    const [category,setCategory]= useState(product ? product.category: '');
-    const [price,setPrice]= useState(product ? product.price: '');
-    const handleSave=(e)=>{
-      const newProducts= {productname: productName, category: category, price: price}
-      const existingProducts= JSON.parse(localStorage.getItem('products')) || []
-      if (product){
-        const updatedProducts= existingProducts.map ((p)=>(p.productname === product.productname ? newProducts : p))
-        setProducts(updatedProducts);
-        localStorage.setItem('products', JSON.stringify(updatedProducts))
+  const [productname,setProductname] =useState( '');
+    const [category,setCategory]= useState('');
+    const [price,setPrice]= useState('');
+    const handleSave= async (e)=>{
+      const newProducts= {productname: productname, category: category, price: price}
+      try{
+      let result = await fetch('http://localhost:5000/products',{
+        method: 'POST',
+        body: JSON.stringify(newProducts),
+        headers: {
+          "Content-Type": "application/json"
       }
-      else{
-      const updatedProducts= [...existingProducts,newProducts]
-      setProducts(updatedProducts)
-      localStorage.setItem('products',JSON.stringify (updatedProducts))
-      }
+      })
+      result = await result.json();
+      console.log(result)
+      navigate('/productform/:id');
       e.preventDefault();
-      navigate('/productform');
+    }catch (error) {
+      console.error("Network error:", error);
     }
+  }
   return (
   <Box
       component="form"
@@ -42,9 +42,9 @@ export default function Productview() {
           required
           id="outlined-required"
           label="Product Name:"
-          name='Productname'
-          value={productName}
-          onChange={(e)=>setProductName(e.target.value)}
+          name='productname'
+          value={productname}
+          onChange={(e)=>setProductname(e.target.value)}
         />
         <TextField
           required

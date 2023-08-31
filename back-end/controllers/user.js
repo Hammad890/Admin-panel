@@ -1,8 +1,10 @@
-import User from "../models/user";
+import User from "../models/user.js";
+import mongoose from "mongoose";
+
 
 export const getAllUsers= async (req,res,next) =>{
     try{
-    const users= await User.find().select("-password")
+    const users= await User.find()
     return res.status(200).send({data : users })
 } catch(err){
     next(err)
@@ -13,6 +15,9 @@ export const getById= async (req,res,next)=>{
     const id= req.params.id
     try{
     const user= await User.findById(id)
+    if (!user) {
+        return res.status(404).send({ message: 'User not found' });
+    }
     return res.status(200).send({ data: user}) 
 } catch(err){
     next(err)
@@ -20,16 +25,8 @@ export const getById= async (req,res,next)=>{
 }
 
 export const editById= async (req,res,next) => {
-    const id= req.params.id
     try{
-        const user= await user.findById(id);
-        if (!user){
-            res.status(404).send({message: "User not found"})
-        }
-        user.username = req.body.username;
-        user.email= req.body.email;
-        user.number= req.body.number
-        await user.save()
+        const user= await User.updateOne({_id: req.params.id , $set: req.body});
         return res.status(200).send({data : user})
     } catch (err) {
         next(err)
@@ -43,17 +40,16 @@ export const createUser= async (req,res) => {
         await user.save()
         return res.status(200).send({message: "User Added Successfully"})
     } catch(err){
-        return (err)
+        return res.status(500).send({err: "Bad request"})
     }
 }
 export const deleteUser= async (req,res,next) => {
-    const id = req.params.id
     try{
-    const user = await User.findByIdAndRemove(id)
+    const user = await User.deleteOne({_id: req.params.id })
     const users = await User.find()
     res.status(200).send({ data: users })
     } catch (err){
-        next (err)
+        return res.status(500).send({err: "Bad request"})
     }
 } 
 

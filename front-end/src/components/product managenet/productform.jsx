@@ -11,34 +11,39 @@ import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Modal, Box, Button } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 export default function Productform() {
   const navigate= useNavigate();
   const [products, setProducts] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const location= useLocation();
-  const { product }= location.state || {};
   useEffect(() => {
-    const loadedProducts = JSON.parse(localStorage.getItem('products')) || [];
-    setProducts(loadedProducts);
-  }, []);
-  
-  const handleEditProduct = (setProducts) => {
-    navigate('/productview', { state: { product : setProducts } })
-  }
+    productData();
+   }, []);
+   const productData= async ()=>{
+     let result= await fetch('http://localhost:5000/products',{
+       method: 'GET',
+     })
+     result= await result.json()
+     console.log (result)
+   setProducts(result.data);
+   }
 
   const deleteModal= ()=>{
     setShowDeleteModal(true)
   } 
-    const handleDeleteProduct = (product) => {  
-      const updatedProducts = products.filter((u) => u.productname !== product.productname);
-      setProducts(updatedProducts);
-      localStorage.setItem('products',JSON.stringify(updatedProducts));
-      }
+    const handleDeleteProduct = async (id) => {
+      let result = await fetch(`http://localhost:5000/products/${id}`,{
+        method: 'Delete'
+      });
+      result = await result.json();
+      if(result){
+        productData();
+    } 
+    }
       const productRows = products.map((product)=>(
         <TableRow
-        key={product.productname}
+        key={product._id}
         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
       >
       <TableCell component="th" scope="row">
@@ -48,13 +53,30 @@ export default function Productform() {
               <TableCell align="right">{product.price}</TableCell>
               <TableCell align="right">
               <Stack direction="row" spacing={0} >
-      <IconButton aria-label="delete" onClick={()=>deleteModal(product)} >
+      <IconButton aria-label="delete" onClick={()=>deleteModal()} >
         <DeleteIcon />
       </IconButton>
-      <IconButton aria-label="edit" onClick={()=>handleEditProduct(product)} >
+      <IconButton aria-label="edit" component={Link} to={"/updatedproduct/"+product._id} >
         <EditIcon  />
       </IconButton>
       </Stack>
+      <Modal
+        open={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4 }}>
+          <h2 id="modal-modal-title">Confirm Delete</h2>
+          <p id="modal-modal-description">Are you sure you want to delete this user?</p>
+          <Button onClick={()=>handleDeleteProduct(product._id)} color="error" variant="contained">
+            Delete
+          </Button>
+          <Button onClick={() => setShowDeleteModal(false)} variant="contained">
+            Cancel
+          </Button>
+        </Box>
+      </Modal>
       </TableCell>
       </TableRow>
       ))
@@ -75,23 +97,6 @@ export default function Productform() {
         </TableBody>
       </Table>
     </TableContainer>
-    <Modal
-        open={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4 }}>
-          <h2 id="modal-modal-title">Confirm Delete</h2>
-          <p id="modal-modal-description">Are you sure you want to delete this user?</p>
-          <Button onClick={()=>handleDeleteProduct(product)} color="error" variant="contained">
-            Delete
-          </Button>
-          <Button onClick={() => setShowDeleteModal(false)} variant="contained">
-            Cancel
-          </Button>
-        </Box>
-      </Modal>
     </div>
   )
 }

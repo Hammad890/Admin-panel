@@ -1,10 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
 
 const Dashboardview = () => {
   const [userCount, setUserCount] = useState(0);
   const [productCount, setProductCount] = useState(0);
-
+  useEffect(() => {
+    userData();
+   }, []);
+   const userData= async ()=>{
+     let result= await fetch('http://localhost:5000/user',{
+       method: 'GET',
+     })
+     result= await result.json()
+   setUserCount(result.data.length);
+   }
+   useEffect(() => {
+    productData();
+   }, []);
+   const productData= async ()=>{
+     let result= await fetch('http://localhost:5000/products',{
+       method: 'GET',
+     })
+     result= await result.json()
+     console.log (result)
+   setProductCount(result.data.length);
+   }
 
   return (
     <div>

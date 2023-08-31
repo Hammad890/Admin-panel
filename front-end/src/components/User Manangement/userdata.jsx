@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
 import { Box,TextField } from '@mui/material'
-import { useNavigate,useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 
-export default function Userview() {
+export default function Userdata() {
     const navigate= useNavigate();
-    const location= useLocation();
-    const {user}= location.state || {};
     const [users, setUsers] = useState([]);
-    const [userName,setUserName] =useState(user ? user.username: '');
-    const [email,setEmail]= useState(user ? user.email: '');
-    const [number,setNumber]= useState(user ? user.number: '');
+    const [userName,setUserName] =useState('');
+    const [email,setEmail]= useState('');
+    const [number,setNumber]= useState('');
     const handleSave= async(e)=>{
         const newUser= {username: userName,email,number}
         try{

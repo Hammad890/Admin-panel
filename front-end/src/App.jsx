@@ -1,8 +1,7 @@
 import Login from "./components/login";
 import './index.css';
 import Signup from "./components/Signup";
-import { useState } from "react";
-import { Routes,Route,useParams } from "react-router-dom";
+import { Routes,Route} from "react-router-dom";
 import DashBoard from "./components/dashboard";
 import Userman from "./components/User Manangement/userman";
 import Userdata from "./components/User Manangement/userdata";
@@ -14,7 +13,6 @@ import Productform from "./components/product managenet/productform";
 import Updatedproduct from "./components/product managenet/updateproduct";
 
 function App() {
-  const [showSignup,setShowSignup]= useState(false);
   const loginPath= "login";
   const signupPath= "signup";
   const dashboardPath= "dashboard";
@@ -28,9 +26,9 @@ function App() {
   const updatedproductPath= "updatedproduct/:id"
   return <div className="app">
   <Routes>
-    <Route path={loginPath} element={<Login setShowSignup={setShowSignup}/>}/>  
-    <Route path={signupPath} element={<Signup showSignup={showSignup}/>}/>
-    <Route path="/" element={<Login setShowSignup={setShowSignup}/>}/>
+    <Route path={loginPath} element={<Login/>}/>  
+    <Route path={signupPath} element={<Signup/>}/>
+    <Route path="/" element={<Login/>}/>
     <Route path={dashboardPath} element={<DashBoard/>}/>
     <Route path={usermanPath} element= {<Userman/>}/>
     <Route path={userdataPath} element={<Userdata/>}/>

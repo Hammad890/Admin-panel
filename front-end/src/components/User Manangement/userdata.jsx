@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 
 export default function Userdata() {
     const navigate= useNavigate();
-    const [users, setUsers] = useState([]);
     const [userName,setUserName] =useState('');
     const [email,setEmail]= useState('');
     const [number,setNumber]= useState('');

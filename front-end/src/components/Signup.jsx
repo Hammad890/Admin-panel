@@ -2,13 +2,12 @@ import React from 'react'
 import { Fragment,useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-export default function Signup(e) {
+export default function Signup() {
   const [userName,setUserName] =useState("");
   const [password,setPassword]= useState("");
   const [confirmPassword,setConfirmpassword]= useState("");
-  const [userType,serUserType]= useState("");
+  const [userType,setUserType]= useState("");
   const [secretKey,setSecretKey]= useState("");
-  const [userCount, setUserCount] = useState(0);
   const navigate= useNavigate();
     const styles={
         padding: "90px",
@@ -21,9 +20,16 @@ export default function Signup(e) {
         paddingRight: "120px",
         marginTop: "50px",
     }
-    const handleSignup =()=>{
+    const goBack= ()=>{
+      window.history.back();
+  }
+    const handleSignup =(e)=>{
       if(!userName || !password){
         alert("Please enter both password and username");
+        return;
+      }
+      if (password !== confirmPassword) {
+        alert("Passwords do not match");
         return;
       }
       const exisitingUsers= localStorage.getItem('usernames');
@@ -43,9 +49,8 @@ export default function Signup(e) {
         alert("Invalid Admin");
         return;
       }
-      localStorage.setItem('username',userName);
+      localStorage.setItem('usernames',userName);
       localStorage.setItem('password',password);
-      setUserCount(prevCount => prevCount + 1);
       navigate('/login');
     }
   return (
@@ -53,8 +58,8 @@ export default function Signup(e) {
         <div className="log" style={styles}>
         <h1 style={{color:'rgb(51, 54, 238)',textAlign:'center'}}>SignUp</h1>
         Resgister As:- 
-        <input type="radio" name="UserType" value="User" onChange={(e)=>{serUserType(e.target.value)}} /> User
-        <input type="radio" name="UserType" value="Admin" onChange={(e)=>{serUserType(e.target.value)}} />Admin <br/>
+        <input type="radio" name="UserType" value="User" onChange={(e)=>{setUserType(e.target.value)}} /> User
+        <input type="radio" name="UserType" value="Admin" onChange={(e)=>{setUserType(e.target.value)}} />Admin <br/>
         {userType === "Admin"? ( <label style={{color:'rgb(51, 54, 238)',fontSize:18+'px',fontWeight:"bold"}}>
           Secret Key:
           <input type="text" placeholder='secret key' onChange={(e)=>setSecretKey(e.target.value)} style={{margin: 12+'px',height:22+'px',width:250+'px'}} />
@@ -79,7 +84,9 @@ export default function Signup(e) {
         <input type="password" placeholder="********" name='password' value={confirmPassword} onChange={(e)=>setConfirmpassword(e.target.value)} style={{margin:12+'px',height:22+'px',width:250+'px'}}/>
         </label>
         <input type="button" value="Signup" onClick={handleSignup} style={{margin:12+'px',backgroundColor:'rgb(51, 54, 238)',color:"antiquewhite",height:30+'px',width:80+'px',fontSize:18+"px"}}/> <br/>
+        <b>Already a user ?</b> <a href="/">Log in</a>
         </div>
+        <button onClick={goBack} style={{margin:12+'px',backgroundColor:'rgb(51, 54, 238)',color:"antiquewhite",height:50+'px',width:80+'px',fontSize:18+"px", borderRadius: 9+"px"}}>Go Back</button>
         </Fragment>
   )
 }

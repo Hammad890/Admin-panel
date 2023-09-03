@@ -11,10 +11,9 @@ import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Modal, Box, Button } from '@mui/material';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 export default function Productform() {
-  const navigate= useNavigate();
   const [products, setProducts] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   useEffect(() => {

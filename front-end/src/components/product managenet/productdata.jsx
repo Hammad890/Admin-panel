@@ -5,7 +5,6 @@ import { useState } from 'react';
 
 export default function Productdata() {
   const navigate= useNavigate();
-  const [products, setProducts]= useState([]);
   const [productname,setProductname] =useState( '');
     const [category,setCategory]= useState('');
     const [price,setPrice]= useState('');
@@ -20,7 +19,6 @@ export default function Productdata() {
       }
       })
       result = await result.json();
-      console.log(result)
       navigate('/productform/:id');
       e.preventDefault();
     }catch (error) {
